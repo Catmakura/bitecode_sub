@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<title>profile - trick</title>
+
+<style>
+body {
+  margin: 0;
+  font-family: -apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  background: #f6f8fa;
+  color: #24292f;
+}
+
+/* ===== トップバー ===== */
+.topbar {
+  background: #ffffff;
+  border-bottom: 1px solid #d0d7de;
+  display: flex;
+  align-items: center;
+  padding: 10px 20px;
+  gap: 15px;
+}
+
+.menu {
+  font-size: 20px;
+  cursor: pointer;
+}
+
+.logo {
+  font-weight: bold;
+  font-size: 20px;
+}
+
+.topname {
+  font-weight: 600;
+}
+
+/* ===== タブメニュー ===== */
+.tabs {
+  display: flex;
+  gap: 20px;
+  padding: 0 40px;
+  border-bottom: 1px solid #d0d7de;
+  background: #fff;
+}
+
+.tabs a {
+  padding: 15px 0;
+  text-decoration: none;
+  color: #24292f;
+  font-size: 14px;
+}
+
+.tabs a.active {
+  border-bottom: 2px solid #fd8c73;
+  font-weight: 600;
+}
+
+/* ===== メインレイアウト ===== */
+.container {
+  max-width: 1200px;
+  margin: 30px auto;
+  display: flex;
+  gap: 40px;
+  padding: 0 20px;
+}
+
+/* ===== 左プロフィール ===== */
+.profile {
+  width: 280px;
+}
+
+.avatar {
+  width: 100%;
+  border-radius: 50%;
+  border: 1px solid #d0d7de;
+}
+
+.profile h2 {
+  margin-bottom: 5px;
+}
+
+.profile .subname {
+  color: #57606a;
+  margin-bottom: 15px;
+}
+
+.edit-btn {
+  width: 100%;
+  padding: 6px;
+  border: 1px solid #d0d7de;
+  background: #f6f8fa;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 15px;
+}
+
+.profile a {
+  display: block;
+  text-decoration: none;
+  color: #0969da;
+  margin-bottom: 8px;
+  font-size: 14px;
+}
+
+/* ===== 右コンテンツ ===== */
+.content {
+  flex: 1;
+}
+
+/* READMEカード */
+.readme {
+  background: #ffffff;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  padding: 20px;
+  margin-bottom: 25px;
+}
+
+.readme h3 {
+  margin-top: 0;
+}
+
+/* Popular repositories */
+.section-title {
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.repo-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.repo {
+  background: #ffffff;
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  padding: 15px;
+}
+
+.repo h4 {
+  margin: 0 0 8px;
+  color: #0969da;
+}
+
+.repo p {
+  margin: 0;
+  font-size: 14px;
+  color: #57606a;
+}
+
+/* レスポンシブ */
+@media (max-width: 900px) {
+  .container {
+    flex-direction: column;
+  }
+
+  .repo-grid {
+    grid-template-columns: 1fr;
+  }
+}
+.repolink {
+  color: #3c64b4;           /* 通常時 */
+  text-decoration: none;  /* 下線を消したい場合 */
+}
+
+.repolink:visited {
+  color: #3c64b4;           /* クリック後（訪問済み） */
+}
+
+.repolink:hover {
+  color: #3c65b4;           /* マウスを乗せたとき */
+}
+
+.repolink:active {
+  color: #3c64b4;           /* クリックしている瞬間 */
+}
+
+.homelink {
+  color: black;           /* 通常時 */
+  text-decoration: none;  /* 下線を消したい場合 */
+}
+
+.homelink:visited {
+  color: black;           /* クリック後（訪問済み） */
+}
+
+.homelink:hover {
+  color: black;           /* マウスを乗せたとき */
+}
+
+.homelink:active {
+  color: black;           /* クリックしている瞬間 */
+}
+</style>
+</head>
+
+<body>
+
+<!-- ===== トップバー ===== -->
+<div class="topbar">
+  <div class="menu">☰</div>
+  <div class="logo">Bite code</div>
+  <div class="topname"><a href="#" class="homelink">Catmakura</a></div>
+</div>
+
+<!-- ===== タブ ===== -->
+<div class="tabs">
+  <a href="#" class="active">Overview</a>
+  <a href="#">Repositories</a>
+  <a href="#">Projects</a>
+  <a href="#">Packages</a>
+  <a href="#">Stars</a>
+</div>
+
+<!-- ===== メイン ===== -->
+<div class="container">
+
+  <!-- 左プロフィール -->
+  <div class="profile">
+    <img src="icon_profile.png" class="avatar">
+    <h2>Nekomakura</h2>
+    <div class="subname">@Catmakura</div>
+
+    <button class="edit-btn">Edit profile</button>
+
+    <a href="https://catmakura.github.io/trick/" target="_blank">🔗 https://catmakura.github.io/trick/</a>
+  </div>
+
+  <!-- 右側 -->
+  <div class="content">
+
+    <!-- README -->
+    <div class="readme">
+      <p>
+        Catmakura / README.md<br>
+      </p>
+      <h3>Hi there 👋</h3>
+      <p>
+        Welcome to my GitHub profile.<br><br>
+       I'm @Catmakura!<br>
+       Now, I am ccurrently working on Trick in github.So,I am learning html,javascript and css!<br>
+       📫 How to reach me:send mail to "busier.stacker-2a⭐︎icloud.com"(⭐︎→@)<br>
+       I am currently looking for collaborators<br>
+       <a href="mailto:busier.stacker-2a@icloud.com?subject=Hallo - github contact&body=This email was sent from trick%0D%0AHallo,I contacted you because I had something to ask you.%0D%0Amain text write here%0D%0A%0D%0A%0D%0A%0D%0A%0D%0AThat's all. Thank you.">click here to send mail</a><br>
+      </p>
+    </div>
+
+    <!-- Popular repos -->
+    <div class="section-title">Popular repositories</div>
+
+    <div class="repo-grid">
+
+      <div class="repo">
+        <h4><a href="bitecode/repository_top.html" class="repolink">trick</a></h4>
+        <p>Web app project</p>
+      </div>
+
+      <div class="repo">
+        <h4><a href="bitecode/repository_catmakura_top.html" class="repolink">Catmakura</a></h4>
+        <p>profile repo</p>
+      </div>
+
+      <div class="repo">
+        <h4><a href="bitecode/repository_Server_code_top.html" class="repolink">Server_code</a></h4>
+        <p>Server program(py) for trick web service</p></p>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+</body>
+</html>
