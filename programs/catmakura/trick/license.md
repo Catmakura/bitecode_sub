@@ -10,4 +10,4 @@ the license of the version you are using will be applied in priority. \
 Online is not like that.\
 6.The copyright belongs to the person.\
 thank you\
-©︎ 2025-2026 Catmakura\
+©︎ 2025-2026 Catmakura
