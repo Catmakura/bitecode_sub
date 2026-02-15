@@ -2,7 +2,7 @@
 <html lang="ja">
 <head>
 <meta charset="UTF-8">
-<title>Code editor - Catmakura・Bitecode</title>
+<title>Code studio - Catmakura・Bitecode</title>
 
 <style>
 body{
@@ -82,6 +82,11 @@ button:hover{
   background:#f3f4f6;
 }
 
+button:disabled{
+  opacity:0.6;
+  cursor:not-allowed;
+}
+
 .code-area{
   display:flex;
   font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;
@@ -109,28 +114,39 @@ pre{
   line-height:1.6;
 }
 
+/* 画像・PDF表示用 */
+.preview-container{
+  padding:20px;
+  flex:1;
+  overflow:auto;
+}
+
+.preview-container img, .preview-container video{
+  width:100%;
+  height:auto;
+  display:block;
+}
+
+.preview-container iframe{
+  width:100%;
+  height:100%;
+  border:none;
+}
+
 .repolink {
-  color: white;           /* 通常時 */
-  text-decoration: none;  /* 下線を消したい場合 */
+  color: white;
+  text-decoration: none;
 }
 
-.repolink:visited {
-  color: white;           /* クリック後（訪問済み） */
-}
-
-.repolink:hover {
-  color: #3c65b4;           /* マウスを乗せたとき */
-}
-
-.repolink:active {
-  color: #3c64b4;           /* クリックしている瞬間 */
-}
+.repolink:visited { color:white; }
+.repolink:hover { color:#3c65b4; }
+.repolink:active { color:#3c64b4; }
 </style>
 </head>
 <body>
 
 <div class="global-header">
-  <a href="../profile.html" class="repolink">Bite code</a>
+  <a href="../profile.html" class="repolink">Code studio・Bite code</a>
 </div>
 
 <div class="breadcrumb" id="filePath">
@@ -146,11 +162,12 @@ pre{
     </div>
 
     <div class="header-right">
+      <button id="copyBtn">Copy</button>
       <button id="downloadBtn">Download</button>
     </div>
   </div>
 
-  <div class="code-area">
+  <div class="code-area" id="codeArea">
     <div class="line-numbers" id="lineNumbers"></div>
     <pre id="codeDisplay"></pre>
   </div>
@@ -164,8 +181,9 @@ const fileInfo = document.getElementById("fileInfo");
 const codeDisplay = document.getElementById("codeDisplay");
 const filePathDisplay = document.getElementById("filePath");
 const downloadBtn = document.getElementById("downloadBtn");
+const copyBtn = document.getElementById("copyBtn");
+const codeArea = document.getElementById("codeArea");
 
-/* ホワイトリスト指定 */
 const allowedFiles = [
   "sample.txt",
   "repo_top.html",
@@ -180,7 +198,6 @@ let currentFileName = "";
 const params = new URLSearchParams(window.location.search);
 currentFileName = params.get("file") || "sample.txt";
 
-/* ホワイトリスト判定 */
 if(!allowedFiles.includes(currentFileName)){
   showError("403 - Access denied.");
 } else {
@@ -189,23 +206,56 @@ if(!allowedFiles.includes(currentFileName)){
 
 function loadFile(fileName){
   filePathDisplay.textContent = fileName;
+  const extension = fileName.split(".").pop().toLowerCase();
+
+  if(extension === "mp3"){
+    showAudio(fileName);
+    return;
+  }
 
   fetch(fileName)
     .then(res => {
-      if(!res.ok) throw new Error("404 - File not found");
+      if(!res.ok) throw new Error();
       return res.text();
     })
     .then(text => {
       currentText = text;
       codeDisplay.textContent = text;
       generateLines(text);
-
-      // タイトル変更
-      document.title = fileName + " - Catmakura・Bitecode";
+      document.title = fileName + " - Code studio・Bite code";
     })
     .catch(() => {
-      showError("File not found.");
+      showError("404 - File not found.");
     });
+}
+
+function showAudio(fileName){
+  resetPreview();
+
+  const container = document.createElement("div");
+  container.className = "preview-container";
+
+  const audio = document.createElement("audio");
+  audio.src = fileName;
+  audio.controls = true;
+  audio.style.width = "100%";
+
+  container.appendChild(audio);
+  codeArea.appendChild(container);
+
+  disableCodeUI();
+}
+
+function resetPreview(){
+  lineNumbers.style.display = "none";
+  codeDisplay.style.display = "none";
+  codeArea.innerHTML = "";
+}
+
+function disableCodeUI(){
+  lineCount.textContent = "Preview mode(video&audio)";
+  fileInfo.textContent = "";
+  copyBtn.disabled = true;
 }
 
 function showError(message){
@@ -214,9 +264,8 @@ function showError(message){
   lineCount.textContent = "0 lines";
   fileInfo.textContent = "";
   downloadBtn.disabled = true;
-
-  // タイトル変更
-  document.title = "error - Catmakura・Bitecode";
+  copyBtn.disabled = true;
+  document.title = "error - Code studio・Bite code";
 }
 
 function generateLines(text){
@@ -227,6 +276,7 @@ function generateLines(text){
   const charCount = text.length;
   const byteSize = new Blob([text]).size;
 
+  // ファイルサイズの表示処理
   let sizeDisplay;
   if(byteSize < 1024){
     sizeDisplay = byteSize + " B";
@@ -239,24 +289,19 @@ function generateLines(text){
   fileInfo.textContent = `${charCount} chars | ${sizeDisplay}`;
 }
 
-codeDisplay.addEventListener("scroll",()=>{
-  lineNumbers.scrollTop = codeDisplay.scrollTop;
+downloadBtn.addEventListener("click", () => {
+  if(!currentFileName) return;
+  const a = document.createElement("a");
+  a.href = currentFileName;
+  a.download = currentFileName;
+  a.click();
 });
 
-downloadBtn.addEventListener("click", () => {
+copyBtn.addEventListener("click", async () => {
   if(!currentText) return;
-
-  const blob = new Blob([currentText], { type: "text/plain" });
-  const url = URL.createObjectURL(blob);
-
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = currentFileName;
-  document.body.appendChild(a);
-  a.click();
-
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
+  await navigator.clipboard.writeText(currentText);
+  copyBtn.textContent = "Copied!";
+  setTimeout(()=> copyBtn.textContent="Copy",1500);
 });
 </script>
 
