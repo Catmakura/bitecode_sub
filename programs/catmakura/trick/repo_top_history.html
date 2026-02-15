@@ -233,13 +233,30 @@ body{
 .repolink:active {
   color: #3c64b4;           /* クリックしている瞬間 */
 }
+
+.homelink {
+  color: white;           /* 通常時 */
+  text-decoration: none;  /* 下線を消したい場合 */
+}
+
+.homelink:visited {
+  color: white;           /* クリック後（訪問済み） */
+}
+
+.homelink:hover {
+  color: #3c46b4;           /* マウスを乗せたとき */
+}
+
+.homelink:active {
+  color: #3c64b4;           /* クリックしている瞬間 */
+}
 </style>
 </head>
 
 <body>
 
 <div class="global-header">
-  <div class="logo"><a href="../profile.html" class="repolink">Bite code</a></div>
+  <div class="logo"><a href="../profile.html" class="homelink">Bite code</a></div>
    <!--
   <input class="search" placeholder="Type / to search">
    -->
