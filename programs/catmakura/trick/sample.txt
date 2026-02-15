@@ -1,0 +1,35 @@
+Sample Text File
+================
+
+This is a sample.txt file.
+
+================
+If this is displayed, the editor's url may not be properly specified.
+
+Created: 2026-02-15
+Author: Catmakura
+type: txt/plain text
+version: 1.0
+================
+sample text en:
+Lorem ipsum dolor sit amet, consectetur adipisicing elit, 
+sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. 
+Duis aute irure dolor in reprehenderit
+
+sample text jp:
+親譲りの無鉄砲で小供の時から損ばかりしている。
+小学校に居る時分学校の二階から飛び降りて一週間ほど腰を抜かした事がある。
+なぜそんな無闇むやみをしたと聞く人があるかも知れぬ。別段深い理由でもない。
+夏目漱石『坊っちゃん』
+
+sample text zh:
+红豆生南国，春来发几枝。
+愿君多采撷，此物最相思
+王维《相思》
+
+wait,do you want to read the story?look at the repository<Gutenberg_nano>
+ちょっと待って！なにか本を読みたいかい？リポジトリ「Gutenberg_nano」を除いて見てね！
+
+--------------------
+end of file.
