@@ -282,7 +282,18 @@ function generateLines(text){
 
   const charCount = text.length;
   const byteSize = new Blob([text]).size;
-  fileInfo.textContent = `${charCount} chars | ${(byteSize/1024).toFixed(2)} KB`;
+
+  // ファイルサイズの表示処理
+  let sizeDisplay;
+  if(byteSize < 1024){
+    sizeDisplay = byteSize + " B";
+  } else if(byteSize < 1024 * 1024){
+    sizeDisplay = (byteSize / 1024).toFixed(2) + " KB";
+  } else {
+    sizeDisplay = (byteSize / (1024 * 1024)).toFixed(2) + " MB";
+  }
+
+  fileInfo.textContent = `${charCount} chars | ${sizeDisplay}`;
 }
 
 downloadBtn.addEventListener("click", () => {
