@@ -82,6 +82,11 @@ button:hover{
   background:#f3f4f6;
 }
 
+button:disabled{
+  opacity:0.6;
+  cursor:not-allowed;
+}
+
 .code-area{
   display:flex;
   font-family:ui-monospace,SFMono-Regular,Consolas,"Liberation Mono",Menlo,monospace;
@@ -110,20 +115,20 @@ pre{
 }
 
 .repolink {
-  color: white;           /* 通常時 */
-  text-decoration: none;  /* 下線を消したい場合 */
+  color: white;
+  text-decoration: none;
 }
 
 .repolink:visited {
-  color: white;           /* クリック後（訪問済み） */
+  color: white;
 }
 
 .repolink:hover {
-  color: #3c65b4;           /* マウスを乗せたとき */
+  color: #3c65b4;
 }
 
 .repolink:active {
-  color: #3c64b4;           /* クリックしている瞬間 */
+  color: #3c64b4;
 }
 </style>
 </head>
@@ -146,6 +151,7 @@ pre{
     </div>
 
     <div class="header-right">
+      <button id="copyBtn">Copy</button>
       <button id="downloadBtn">Download</button>
     </div>
   </div>
@@ -164,8 +170,8 @@ const fileInfo = document.getElementById("fileInfo");
 const codeDisplay = document.getElementById("codeDisplay");
 const filePathDisplay = document.getElementById("filePath");
 const downloadBtn = document.getElementById("downloadBtn");
+const copyBtn = document.getElementById("copyBtn");
 
-/* ホワイトリスト指定 */
 const allowedFiles = [
   "sample.txt",
   "index.html",
@@ -179,7 +185,6 @@ let currentFileName = "";
 const params = new URLSearchParams(window.location.search);
 currentFileName = params.get("file") || "sample.txt";
 
-/* ホワイトリスト判定 */
 if(!allowedFiles.includes(currentFileName)){
   showError("403 - Access denied.");
 } else {
@@ -198,8 +203,6 @@ function loadFile(fileName){
       currentText = text;
       codeDisplay.textContent = text;
       generateLines(text);
-
-      // タイトル変更
       document.title = fileName + " - editor";
     })
     .catch(() => {
@@ -213,8 +216,7 @@ function showError(message){
   lineCount.textContent = "0 lines";
   fileInfo.textContent = "";
   downloadBtn.disabled = true;
-
-  // タイトル変更
+  copyBtn.disabled = true;
   document.title = "error - editor";
 }
 
@@ -256,6 +258,20 @@ downloadBtn.addEventListener("click", () => {
 
   document.body.removeChild(a);
   URL.revokeObjectURL(url);
+});
+
+copyBtn.addEventListener("click", async () => {
+  if(!currentText) return;
+
+  try{
+    await navigator.clipboard.writeText(currentText);
+    copyBtn.textContent = "Copied!";
+    setTimeout(() => {
+      copyBtn.textContent = "Copy";
+    }, 1500);
+  } catch(err){
+    alert("コピーに失敗しました");
+  }
 });
 </script>
 
