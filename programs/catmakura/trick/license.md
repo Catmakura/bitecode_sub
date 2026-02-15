@@ -7,7 +7,7 @@ Attribution-NonCommercial-ShareAlike International\
 5.This license is subject to change without notice.\
 If you are using an old download version, \
 the license of the version you are using will be applied in priority. \
-Online is not like that.
-6.The copyright belongs to the person.
-thank you
+Online is not like that.\
+6.The copyright belongs to the person.\
+thank you\
 ©︎ 2025-2026 Catmakura\
