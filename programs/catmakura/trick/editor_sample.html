@@ -114,22 +114,33 @@ pre{
   line-height:1.6;
 }
 
+/* 画像・PDF表示用 */
+.preview-container{
+  padding:20px;
+  flex:1;
+  overflow:auto;
+}
+
+.preview-container img{
+  width:100%;
+  height:auto;
+  display:block;
+}
+
+.preview-container iframe{
+  width:100%;
+  height:100%;
+  border:none;
+}
+
 .repolink {
   color: white;
   text-decoration: none;
 }
 
-.repolink:visited {
-  color: white;
-}
-
-.repolink:hover {
-  color: #3c65b4;
-}
-
-.repolink:active {
-  color: #3c64b4;
-}
+.repolink:visited { color:white; }
+.repolink:hover { color:#3c65b4; }
+.repolink:active { color:#3c64b4; }
 </style>
 </head>
 <body>
@@ -156,7 +167,7 @@ pre{
     </div>
   </div>
 
-  <div class="code-area">
+  <div class="code-area" id="codeArea">
     <div class="line-numbers" id="lineNumbers"></div>
     <pre id="codeDisplay"></pre>
   </div>
@@ -171,13 +182,23 @@ const codeDisplay = document.getElementById("codeDisplay");
 const filePathDisplay = document.getElementById("filePath");
 const downloadBtn = document.getElementById("downloadBtn");
 const copyBtn = document.getElementById("copyBtn");
+const codeArea = document.getElementById("codeArea");
 
 const allowedFiles = [
   "sample.txt",
   "index.html",
   "README.md",
   "license.md",
+  "image.png",
+  "image.jpg",
+  "image.jpeg",
+  "image.gif",
+  "image.svg",
+  "file.pdf"
 ];
+
+const imageExtensions = ["png","jpg","jpeg","gif","svg"];
+const pdfExtensions = ["pdf"];
 
 let currentText = "";
 let currentFileName = "";
@@ -193,10 +214,21 @@ if(!allowedFiles.includes(currentFileName)){
 
 function loadFile(fileName){
   filePathDisplay.textContent = fileName;
+  const extension = fileName.split(".").pop().toLowerCase();
+
+  if(imageExtensions.includes(extension)){
+    showImage(fileName);
+    return;
+  }
+
+  if(pdfExtensions.includes(extension)){
+    showPDF(fileName);
+    return;
+  }
 
   fetch(fileName)
     .then(res => {
-      if(!res.ok) throw new Error("404 - File not found");
+      if(!res.ok) throw new Error();
       return res.text();
     })
     .then(text => {
@@ -208,6 +240,46 @@ function loadFile(fileName){
     .catch(() => {
       showError("File not found.");
     });
+}
+
+function showImage(fileName){
+  resetPreview();
+  const container = document.createElement("div");
+  container.className = "preview-container";
+
+  const img = document.createElement("img");
+  img.src = fileName;
+
+  container.appendChild(img);
+  codeArea.appendChild(container);
+
+  disableCodeUI();
+}
+
+function showPDF(fileName){
+  resetPreview();
+  const container = document.createElement("div");
+  container.className = "preview-container";
+
+  const iframe = document.createElement("iframe");
+  iframe.src = fileName;
+
+  container.appendChild(iframe);
+  codeArea.appendChild(container);
+
+  disableCodeUI();
+}
+
+function resetPreview(){
+  lineNumbers.style.display = "none";
+  codeDisplay.style.display = "none";
+  codeArea.innerHTML = "";
+}
+
+function disableCodeUI(){
+  lineCount.textContent = "Preview mode";
+  fileInfo.textContent = "";
+  copyBtn.disabled = true;
 }
 
 function showError(message){
@@ -227,51 +299,22 @@ function generateLines(text){
 
   const charCount = text.length;
   const byteSize = new Blob([text]).size;
-
-  let sizeDisplay;
-  if(byteSize < 1024){
-    sizeDisplay = byteSize + " B";
-  } else if(byteSize < 1024 * 1024){
-    sizeDisplay = (byteSize / 1024).toFixed(2) + " KB";
-  } else {
-    sizeDisplay = (byteSize / (1024 * 1024)).toFixed(2) + " MB";
-  }
-
-  fileInfo.textContent = `${charCount} chars | ${sizeDisplay}`;
+  fileInfo.textContent = `${charCount} chars | ${(byteSize/1024).toFixed(2)} KB`;
 }
 
-codeDisplay.addEventListener("scroll",()=>{
-  lineNumbers.scrollTop = codeDisplay.scrollTop;
-});
-
 downloadBtn.addEventListener("click", () => {
-  if(!currentText) return;
-
-  const blob = new Blob([currentText], { type: "text/plain" });
-  const url = URL.createObjectURL(blob);
-
+  if(!currentFileName) return;
   const a = document.createElement("a");
-  a.href = url;
+  a.href = currentFileName;
   a.download = currentFileName;
-  document.body.appendChild(a);
   a.click();
-
-  document.body.removeChild(a);
-  URL.revokeObjectURL(url);
 });
 
 copyBtn.addEventListener("click", async () => {
   if(!currentText) return;
-
-  try{
-    await navigator.clipboard.writeText(currentText);
-    copyBtn.textContent = "Copied!";
-    setTimeout(() => {
-      copyBtn.textContent = "Copy";
-    }, 1500);
-  } catch(err){
-    alert("コピーに失敗しました");
-  }
+  await navigator.clipboard.writeText(currentText);
+  copyBtn.textContent = "Copied!";
+  setTimeout(()=> copyBtn.textContent="Copy",1500);
 });
 </script>
 
