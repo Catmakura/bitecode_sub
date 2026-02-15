@@ -141,55 +141,6 @@ pre{
 .repolink:visited { color:white; }
 .repolink:hover { color:#3c65b4; }
 .repolink:active { color:#3c64b4; }
-
-/* 音楽プレイヤー */
-.music-player {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.music-player img {
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-}
-
-.music-player button {
-  padding: 5px 10px;
-}
-
-.music-player .progress-bar {
-  flex: 1;
-}
-
-.music-player .progress {
-  width: 100%;
-  height: 5px;
-  background-color: #ddd;
-  border-radius: 5px;
-}
-
-.music-player .progress .progress-bar {
-  height: 100%;
-  background-color: #3c65b4;
-  width: 0;
-}
-
-.music-player button.disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.animation-controls {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.animation-controls button {
-  padding: 5px 10px;
-}
 </style>
 </head>
 <body>
@@ -242,18 +193,12 @@ const allowedFiles = [
   "image.jpg",
   "image.jpeg",
   "image.gif",
-  "image.svg",
   "file.pdf",
   "audio.mp3",
   "トンデモワンダーズ.mp3",
   "audio.wav",
   "video.mp4"
 ];
-
-const imageExtensions = ["png","jpg","jpeg","gif","svg"];
-const audioExtensions = ["mp3","wav"];
-const videoExtensions = ["mp4"];
-const animationExtensions = ["gif","png"];
 
 let currentText = "";
 let currentFileName = "";
@@ -271,23 +216,8 @@ function loadFile(fileName){
   filePathDisplay.textContent = fileName;
   const extension = fileName.split(".").pop().toLowerCase();
 
-  if(imageExtensions.includes(extension)){
-    showImage(fileName);
-    return;
-  }
-
-  if(audioExtensions.includes(extension)){
+  if(extension === "mp3"){
     showAudio(fileName);
-    return;
-  }
-
-  if(videoExtensions.includes(extension)){
-    showVideo(fileName);
-    return;
-  }
-
-  if(animationExtensions.includes(extension)){
-    showAnimation(fileName);
     return;
   }
 
@@ -307,87 +237,19 @@ function loadFile(fileName){
     });
 }
 
-function showImage(fileName){
-  resetPreview();
-  const container = document.createElement("div");
-  container.className = "preview-container";
-
-  const img = document.createElement("img");
-  img.src = fileName;
-
-  container.appendChild(img);
-  codeArea.appendChild(container);
-
-  disableCodeUI();
-}
-
 function showAudio(fileName){
   resetPreview();
+
   const container = document.createElement("div");
-  container.className = "music-player";
+  container.className = "preview-container";
 
   const audio = document.createElement("audio");
   audio.src = fileName;
   audio.controls = true;
+  audio.style.width = "100%";
+
   container.appendChild(audio);
-
-  const img = document.createElement("img");
-  img.src = fileName;
-  container.appendChild(img);
-
   codeArea.appendChild(container);
-  disableCodeUI();
-}
-
-function showVideo(fileName){
-  resetPreview();
-  const container = document.createElement("div");
-  container.className = "preview-container";
-
-  const video = document.createElement("video");
-  video.src = fileName;
-  video.controls = true;
-  video.style.width = "100%";
-  video.style.height = "auto";
-
-  container.appendChild(video);
-  codeArea.appendChild(container);
-
-  disableCodeUI();
-}
-
-function showAnimation(fileName){
-  resetPreview();
-  const container = document.createElement("div");
-  container.className = "preview-container";
-
-  const img = document.createElement("img");
-  img.src = fileName;
-  img.style.width = "100%";
-  img.style.height = "auto";
-  img.setAttribute("loop", true);
-
-  container.appendChild(img);
-  codeArea.appendChild(container);
-
-  const animationControls = document.createElement("div");
-  animationControls.className = "animation-controls";
-
-  const playPauseButton = document.createElement("button");
-  playPauseButton.textContent = "Pause";
-  animationControls.appendChild(playPauseButton);
-
-  playPauseButton.addEventListener("click", () => {
-    if (img.style.animationPlayState === "paused") {
-      img.style.animationPlayState = "running";
-      playPauseButton.textContent = "Pause";
-    } else {
-      img.style.animationPlayState = "paused";
-      playPauseButton.textContent = "Play";
-    }
-  });
-
-  container.appendChild(animationControls);
 
   disableCodeUI();
 }
